@@ -14,6 +14,7 @@ func NewRouter(router *gin.Engine, uc *usecase.Usecase) {
 		restaurant := api.Group("/restaurants")
 		{
 			restaurant.POST("", restaurantCtrl.CreateRestaurant)
+			restaurant.GET("", restaurantCtrl.GetAllRestaurants)
 		}
 	}
 }

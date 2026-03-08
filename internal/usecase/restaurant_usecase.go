@@ -12,6 +12,7 @@ import (
 
 type IRestaurantUsecase interface {
 	CreateRestaurant(ctx context.Context, req model.CreateRestaurant) error
+	GetAllRestaurants(ctx context.Context, pagination model.Pagination) ([]entity.Restaurant, error)
 }
 
 type RestaurantUseCase struct {
@@ -28,4 +29,8 @@ func (uc *RestaurantUseCase) CreateRestaurant(ctx context.Context, req model.Cre
 		Name:     req.Name,
 		Location: req.Location,
 	})
+}
+
+func (uc *RestaurantUseCase) GetAllRestaurants(ctx context.Context, pagination model.Pagination) ([]entity.Restaurant, error) {
+	return uc.repo.GetAllRestaurants(ctx, pagination)
 }

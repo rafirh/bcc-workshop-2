@@ -1,13 +1,15 @@
 package repository
 
 import (
-	"gorm.io/gorm"
-	"context"
 	"bcc-workshop-2/internal/entity"
+	"bcc-workshop-2/internal/model"
+	"context"
+	"gorm.io/gorm"
 )
 
 type IRestaurantRepository interface {
 	CreateRestaurant(ctx context.Context, restaurant entity.Restaurant) error
+	GetAllRestaurants(ctx context.Context, pagination model.Pagination) ([]entity.Restaurant, error)
 }
 
 type RestaurantRepository struct {
@@ -25,3 +27,11 @@ func (r *RestaurantRepository) CreateRestaurant(ctx context.Context, restaurant 
 	return nil
 }
 
+func (r *RestaurantRepository) GetAllRestaurants(ctx context.Context, pagination model.Pagination) ([]entity.Restaurant, error) {
+	var restaurants []entity.Restaurant
+	offset := (pagination.Page - 1) * pagination.Limit
+	if err := r.db.WithContext(ctx).Order("created_at DESC").Limit(pagination.Limit).Offset(offset).Find(&restaurants).Error; err != nil {
+		return nil, err
+	}
+	return restaurants, nil
+}
